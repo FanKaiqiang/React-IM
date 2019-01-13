@@ -35,10 +35,12 @@ export default class SignUp extends Component {
         let pwd = this.refs.auth.value;
         let nickname = this.refs.nickname.value;
         if (!username || !pwd) {
-            return false;
+            tooltip.show({
+                type: 'error',
+                content: '账号密码不能为空'
+            });
+            return;
         }
-
-
         // //环信的API
         let options = {
             username: username.toLowerCase(),

@@ -22,10 +22,24 @@ export function reg(options) {//返回一个异步的action
             options.error = function (e) {
                 onError && onError();//存在就执行
                 dispatch(regStatus(3));
-                reject();
+                reject(e);
             };
             dispatch(regStatus(1));
             sdk.conn.registerUser(options);
+        });
+    }
+}
+
+export function login(options) {//返回一个异步的action
+    return (dispatch, getState) => {//返回一个Promise
+        return new Promise((resolve, reject) => {//将注册的成功失败转为Promise的形式
+            options.success = function () {
+                resolve();
+            }
+            options.error = function (e) {
+                reject(e);
+            };
+            sdk.conn.open(options);
         });
     }
 }

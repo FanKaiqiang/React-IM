@@ -6,21 +6,30 @@ import SignUp from '@component/sign/singup';
 import Login from '@component/sign/login';
 import Chat from '@component/chat';
 import history from '@history/history';
+import {getToken} from '@util/token';
 import './App.css';
 
 class App extends Component {
-  // componentWillReceiveProps() {
-
-  // }
-  render() {
-    return (
-      <div className="main">
-      侧边栏
-         {this.props.children}
-      </div>
-    );
+  componentWillMount() {
+    let token = getToken();
+    if (token) {
+      //不做任何处理
+    } else {
+      history.push('/login');
+    }
   }
-}
+    // componentWillReceiveProps() {
+
+    // }
+    render() {
+      return (
+        <div className="main">
+          侧边栏
+         {this.props.children}
+        </div>
+      );
+    }
+  }
 
 export default class Main extends Component {//使用router配置页面路由
   render() {
