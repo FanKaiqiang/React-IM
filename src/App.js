@@ -24,7 +24,6 @@ class App extends Component {
     render() {
       return (
         <div className="main">
-          侧边栏
          {this.props.children}
         </div>
       );

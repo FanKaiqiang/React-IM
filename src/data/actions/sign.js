@@ -32,9 +32,9 @@ export function reg(options) {//返回一个异步的action
 
 export function login(options) {//返回一个异步的action
     return (dispatch, getState) => {//返回一个Promise
-        return new Promise((resolve, reject) => {//将注册的成功失败转为Promise的形式
-            options.success = function () {
-                resolve();
+        return new Promise((resolve, reject) => {
+            options.success = function (token) {//登录成功抛出token
+                resolve(token);
             }
             options.error = function (e) {
                 reject(e);
