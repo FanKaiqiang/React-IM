@@ -1,0 +1,15 @@
+@import '../../common/css/variable';
+.slideBar{
+    width: 80px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color:$primary;
+    color:#FFF;
+    z-index:1;
+}
+
+.app-item{
+    text-align: center;
+} 

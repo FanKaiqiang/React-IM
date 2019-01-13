@@ -1,0 +1,16 @@
+.sessionlist{
+  position: absolute;
+  left: 80px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  border-right:1px solid #eee;
+}
+.session-item{
+  padding:5px 10px;
+  border-bottom:1px solid #eee;
+  &:last-child{
+    border-bottom:none;
+  }
+} 

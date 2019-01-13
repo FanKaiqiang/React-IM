@@ -1,3 +1,35 @@
+@import './components/common/css/variable';
+@font-face {
+  font-family: 'iconfont';  /* project id 471732 */
+  src: url('//at.alicdn.com/t/font_471732_f3c5rbbt9b7nl8fr.eot');
+  src: url('//at.alicdn.com/t/font_471732_f3c5rbbt9b7nl8fr.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_471732_f3c5rbbt9b7nl8fr.woff') format('woff'),
+  url('//at.alicdn.com/t/font_471732_f3c5rbbt9b7nl8fr.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_471732_f3c5rbbt9b7nl8fr.svg#iconfont') format('svg');
+}
+
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:$font-size-xxlarge;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* color:#fff */
+}
+
+.icon-setting1:before { content: "\e65e"; }
+
+.icon-usered:before { content: "\e68c"; }
+
+.icon-chat:before { content: "\e665"; }
+
+.icon-logout:before { content: "\e636"; }
+
+.icon-chat1:before { content: "\e626"; }
+
+
+
 #root {
   background: #EEE;
   position: absolute;
