@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { reg } from '@data/actions/sign';
 import tooltip from '@component/common/tooltip';
+import safeRender from '@decorator/saferender';
+import history from '@history/history';
 import classnames from 'classnames';
 import './index.css';
 
@@ -14,10 +16,17 @@ import './index.css';
         reg
     }
 )
+
+@safeRender({
+    active: true,
+    errorHandler: function(e)  {//错误处理：弹出抛错的钩子
+        // alert(e.displayName + '---' + e.method)
+    }
+})
 export default class SignUp extends Component {
 
-    keyDown = () => {
-
+    componentDidMount(){
+        // throw new Error('')
     }
 
     signup = () => {
@@ -46,6 +55,7 @@ export default class SignUp extends Component {
                 content: '注册成功',
                 type: 'success'
             });
+            history.push('/login');
         }).catch(() => {
             //显示tooltip
             tooltip.show({
