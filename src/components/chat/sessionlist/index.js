@@ -3,6 +3,8 @@ import Avator from '@component/common/avator';
 import {showDialog, closeDialog} from '@component/common/dialog';
 import { Link } from 'react-router';
 import './index.css';
+import {connect} from 'react-redux';
+import {setCurrentSession} from '@data/actions/session';
 
 export default class SessionList extends Component {
     constructor(props) {
@@ -109,7 +111,19 @@ export default class SessionList extends Component {
     }
 }
 
+@connect(
+    (state) => ({
+
+    }),
+    {
+        setCurrentSession
+    }
+)
 class SessionItem extends Component {
+    itemClick = () => {
+        let {setCurrentSession, friend} = this.props;
+        setCurrentSession(friend);
+    }
     render() {
         let {friend, isSelected} = this.props;
         let url = `chat/single/${friend.name}`;
