@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Dialog from '@component/common/dialog';
+import Avator from '@component/common/avator';
+import {showDialog, closeDialog} from '@component/common/dialog';
+import { Link } from 'react-router';
 import './index.css';
 
 export default class SessionList extends Component {
@@ -8,7 +10,7 @@ export default class SessionList extends Component {
         this.state = {
             friendList: [],
             showPanel: false,
-            subscribeMessage:null
+            subscribeMessage: null
         }
     }
 
@@ -30,14 +32,27 @@ export default class SessionList extends Component {
         //对方收到请求加为好友
         if (message.type === 'subscribe') {
             this.setState({
-                showPanel: true,
                 subscribeMessage: message
             });
-            //this.subscribeMessage = message;
-
-            //显示统一/拒绝面板，如果同意，
-
+            this.showPresenceDialog();
         }
+    }
+
+    showPresenceDialog = () => {
+        let { subscribeMessage } = this.state;
+        showDialog({
+            title: "好友申请",
+            content: <div>
+                <div>{subscribeMessage.from}邀请你加为好友</div>
+                <div>留言：{subscribeMessage.status}</div>
+            </div>,
+
+
+            footer: <div>
+                <button className="button reject" onClick={this.reject}>拒绝</button>
+                <button className="button accept" onClick={this.agree}>同意</button>
+            </div>
+        });
     }
 
     agree = () => {
@@ -50,9 +65,7 @@ export default class SessionList extends Component {
             to: message.from,
             message: '[resp:true]'
         });
-        this.setState({
-            showPanel: false
-        });
+        closeDialog();
     }
     reject = () => {
         let message = this.state.subscribeMessage;
@@ -62,9 +75,7 @@ export default class SessionList extends Component {
             message: 'rejectAddFriend'
         });
 
-        this.setState({
-            showPanel: false
-        });
+        closeDialog();
     }
 
     getRosters = () => {
@@ -85,30 +96,14 @@ export default class SessionList extends Component {
     }
 
     render() {
-        let {friendList, showPanel, subscribeMessage} = this.state;
+        let { friendList, showPanel } = this.state;
+        let { chatId } = this.props;
         return (
             <div className="sessionlist">
                 {friendList.length ? friendList.map((friend) => {
-                    return <SessionItem friend={friend} key={friend.name} />
+                    let isSelected = friend.name === chatId;
+                    return <SessionItem friend={friend} key={friend.name} isSelected={isSelected} />
                 }) : null}
-                {/* 下面不是好方法 */}
-                {showPanel ? <Dialog className=""
-                    title="好友申请"
-                    content={
-                        <div>
-                            <div>{subscribeMessage.from}邀请你加为好友</div>
-                            <div>留言：{subscribeMessage.status}</div>
-                        </div>
-
-                    }
-                    footer={
-                        <div>
-                            <button className="reject" onClick={this.reject}>拒绝</button>
-                            <button className="accept" onClick={this.agree}>同意</button>
-                        </div>
-                    }
-                >
-                </Dialog> : null}
             </div>
         );
     }
@@ -116,9 +111,19 @@ export default class SessionList extends Component {
 
 class SessionItem extends Component {
     render() {
-        let { friend } = this.props;
-        return <div className="session-item">
-            {friend.name}
+        let {friend, isSelected} = this.props;
+        let url = `chat/single/${friend.name}`;
+
+        return <div className={ isSelected? "session-item-outer selected" : "session-item-outer"}>
+            <Link to = {url} className="session-item" onClick = {this.itemClick}>
+                <div className="ctn-avator">
+                    <Avator />
+                </div>
+                <div className="session-inner">
+                    <div className="name">{friend.name}</div>
+                    <div className="msg-preview"></div>
+                </div>
+            </Link>
         </div>;
     }
 }
