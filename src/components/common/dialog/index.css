@@ -6,7 +6,15 @@
   left: 0;
 }
 
-.mask {
+.dialog-outer {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.dialog-outer > .mask {
   background: rgba(0,0,0,0.1);
   position: absolute;
   left: 0;
@@ -14,7 +22,6 @@
   width: 100%;
   height: 100%;
 }
-
 .dialog-inner {
   background: #FFF;
   position: absolute;
@@ -25,9 +32,36 @@
   margin-left: -180px;
   margin-top: -120px;
   color:#333;
+
 }
-.dialog-inner .close {
+.dialog-inner > .close {
   position: absolute;
-  right: 0;
+  right: 10px;
   color: #333;
-} 
+  top: 10px;
+  cursor: pointer;
+  .iconfont{
+    font-size:20px;
+  }
+}
+.dialog-inner > .title-container {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+.dialog-inner > .content-container {
+  padding: 15px;
+}
+.dialog-inner > .footer-container {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+}
+.dialog-inner > .footer-container > .button{
+  width: auto;
+  margin-right: 10px;
+  padding: 0 20px;
+}
