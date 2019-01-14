@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-// import classnames from 'classnames';
-
+import classnames from 'classnames';
+import Icon from '@component/common/icon';
+import ReactDOM from 'react-dom';
 import './index.css';
+
 export default class Dialog extends Component {
   static defaultProps = {
     showMask: true
@@ -25,18 +27,16 @@ export default class Dialog extends Component {
 
   render() {
     let { title, content, footer, showMask } = this.props;
-    // if(!this.state.show){
-    //   return null
-    // }
-    return (
-      <div className="dialog-outer">
-      {/* showMask决定是否显示遮罩层 */}
+    let { show } = this.state;
+    return (<div>
+      {show ? <div className="dialog-outer">
+        {/* showMask决定是否显示遮罩层 */}
         {showMask ? <div className="mask"></div> : null}
 
         <div className="dialog-inner">
           {/* 对话框关闭按钮 */}
           <div className="close" onClick={this.close}>
-            关闭
+            <Icon type="close" />
           </div>
           {/* 对话框标题 */}
           <div className="title-container">
@@ -51,15 +51,25 @@ export default class Dialog extends Component {
             {footer}
           </div>
         </div>
-      </div>
+      </div> : null}</div>
     );
   }
 }
 
-// export function showDialog(props) {
+let d;
+export function showDialog(props) {
+  if (d) {
+    closeDialog();
+  }
+  d = document.createElement('div');
+  document.body.appendChild(d);
+  ReactDOM.render(<Dialog {...props} />, d);
+}
 
-// }
-
-// export function closeDialog() {
-
-// }
+export function closeDialog() {
+  if (d) {
+    ReactDOM.unmountComponentAtNode(d);
+    d.parentNode.removeChild(d);
+    d = null;
+  }
+}
