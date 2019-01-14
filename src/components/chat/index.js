@@ -7,13 +7,13 @@ import './index.css';
 export default class Chat extends Component {
 
     render() {
-        let {params} = this.props;
+        let { params } = this.props;
         return (
             <div className="ctn-chat">
                 <div>
                     <SlideBar />
-                    <SessionList chatType = {params.chatType} chatId = {params.chatId}/>
-                    <BubblePanel />
+                    <SessionList chatType={params.chatType} chatId={params.chatId} />
+                    {params.chatId ? <BubblePanel chatType={params.chatType} chatId={params.chatId} /> : null}
                 </div>
             </div>
         );
