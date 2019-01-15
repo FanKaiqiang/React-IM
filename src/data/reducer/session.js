@@ -12,5 +12,4 @@ export default function sessionReducer(state = {
         default:
             return state;
     }
-    return state;
 } 
