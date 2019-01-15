@@ -23,6 +23,18 @@ export function getRosters() {
     }
 }
 
-export function changeRosterWithMsg(msg) {
+export function changeRosterWithMsg(msg) {//
+    return (dispatch, getState) => {
+        let name = msg.body ? msg.body.to :  msg.from;
+        let rosters = getState().session.rosters;//获取所有好友
+        let newRosters = rosters.map((roster) => {//遍历
+            let newRoster = {...roster};
+            if (roster.name === name) {//遍历到要更新的好友
+                newRoster.message = msg;//消息填充
+            }
+            return newRoster;
+        })
 
+        dispatch(setRosters(newRosters));
+    }
 } 
