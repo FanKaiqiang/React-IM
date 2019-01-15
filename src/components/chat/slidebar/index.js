@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { getToken } from '@util/token';
 import Icon from '@component/common/icon';
 import Avator from '@component/common/avator';
-import {showDialog} from '@component/common/dialog';
+import { showDialog, closeDialog } from '@component/common/dialog';
 import './index.css';
 
 export default class SlideBar extends Component {
@@ -10,44 +10,38 @@ export default class SlideBar extends Component {
         showPanel: false
     }
     showAddRosterPanel = () => {
-        // this.setState({
-        //     showPanel: true
-        // });
-        
+
         showDialog({
             content:
                 <div className="input-container">
-                    <input type="text"  className="input" placeholder="输入名字" />
+                    <input type="text" ref={(ins) => { this.nickname = ins; }} className="input" placeholder="输入名字" />
                 </div>,
 
-            footer:<div className="footer">
-                    <button className="button" onClick = {this.addRoster}>确定</button>
-                </div>,
+            footer: <div className="footer">
+                <button className="button" onClick={this.addRoster}>确定</button>
+            </div>,
             title: '添加好友'
         })
     }
     addRoster = () => {//对话框点击确认触发的事件：添加好友
-        if (this.refs.nickname) {
-            let value = this.refs.nickname.value;
+        if (this.nickname) {
+            let value = this.nickname.value;
             if (!value.trim()) {
                 alert('内容不能为空');
                 return;
             }
         }
         sdk.conn.subscribe({
-            to: this.refs.nickname.value,
+            to: this.nickname.value,
             // Demo里面接收方没有展现出来这个message，在status字段里面
-            message: '加个好友呗!'   
+            message: '加个好友呗!'
         });
 
-        this.setState({
-            showPanel: false
-        });
+        closeDialog();
 
     }
     render() {
         let tokenUser = getToken();
-        let { showPanel } = this.state;
         let username = tokenUser ? tokenUser.user.username : '';
         return (
             <div className="slideBar">
