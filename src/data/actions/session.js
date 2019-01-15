@@ -1,11 +1,28 @@
-import {SET_CURRENT_SESSION, createAction} from './actiontypes';
+import {SET_CURRENT_SESSION, SET_ROSTERS, createAction} from './actiontypes';
 
 export let setCurrentSession = createAction(SET_CURRENT_SESSION, 'session');
+export let setRosters = createAction(SET_ROSTERS, 'rosters');
 
-export function getRoster() {
-    //.....
+export function getRosters() {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            sdk.conn.getRoster({
+                success: (rosters) => {
+                    rosters = rosters.filter((roster) => {
+                        return roster.subscription === 'both';
+                    });
+                    dispatch(setRosters(rosters));
+                    resolve(rosters);
+                },
+                error: (e) => {
+                    reject(e);
+                }
+            });
+        });
+
+    }
 }
 
-export function changeRoster() {
+export function changeRosterWithMsg(msg) {
 
 } 
