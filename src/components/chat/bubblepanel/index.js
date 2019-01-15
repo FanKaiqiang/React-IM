@@ -15,6 +15,9 @@ import './index.css';
     }
 )
 export default class BubblePanel extends Component {
+    componentDidUpdate () {
+        this.refs.list.scrollTop = this.refs.inner.offsetHeight;
+    }
     sendTextMessage = () => {
         let { sendTextMessage, currentSession, chatType } = this.props;
         sendTextMessage(currentSession.name, this.refs.msginput.value, chatType);
@@ -36,8 +39,8 @@ export default class BubblePanel extends Component {
                 <div className="title">
                     {currentSession ? currentSession.name : ''}
                 </div>
-                <div className="ctn-msglist">
-                    <div className="ctn-msglist-inner">
+                <div className="ctn-msglist" ref = "list">
+                    <div className="ctn-msglist-inner" ref="inner">
                         {msgs.map((msg) => {
                             return <BubbleItem key={msg.id} msg={msg} />
                         })}
@@ -58,8 +61,7 @@ export default class BubblePanel extends Component {
 class BubbleItem extends Component {
     render() {
         let { msg } = this.props;
-        let fromMe = true; //true 表示我发出去， to 表示我收到的
-
+        let fromMe = msg.fromMe; //true 表示我发出去， to 表示我收到的
         let messageItemClassName = classnames({
             'message-item': true,
             'you': !fromMe,
