@@ -1,35 +1,38 @@
 import React, { Component } from 'react';
 import Avator from '@component/common/avator';
-import {showDialog, closeDialog} from '@component/common/dialog';
+import { showDialog, closeDialog } from '@component/common/dialog';
 import { Link } from 'react-router';
 import './index.css';
-import {connect} from 'react-redux';
-import {setCurrentSession} from '@data/actions/session';
+import { connect } from 'react-redux';
+import eventEmitter from '@util/event';
+import { setCurrentSession, getRosters } from '@data/actions/session';
+import shallowequal from 'shallowequal';
+
+@connect(
+    (state) => ({
+        rosters: state.session.rosters
+    }),
+    {
+        getRosters
+    }
+)
 
 export default class SessionList extends Component {
     constructor(props) {
         super()
         this.state = {
-            friendList: [],
             showPanel: false,
             subscribeMessage: null
         }
     }
 
     componentWillMount() {
-        sdk.conn.listen({
-            onOpened: (message) => {//开启页面获取好友列表
-                this.getRosters();
-            },
-            onRoster: () => {//好友变更后获取好友列表
-                this.getRosters();
-            },
-            onPresence: (message) => {//同意添加对方为好友
-                this.handlePresence(message);
-            }
-        });
+        eventEmitter.on('presence', this.handlePresence);//监听事件
     }
+    componentWillUnmount() {
+        eventEmitter.removeListener('presence', this.handlePresence);//移除事件
 
+    }
     handlePresence = (message) => {
         //对方收到请求加为好友
         if (message.type === 'subscribe') {
@@ -98,7 +101,8 @@ export default class SessionList extends Component {
     }
 
     render() {
-        let { friendList, showPanel } = this.state;
+        let { showPanel } = this.state;
+        let { rosters: friendList } = this.props;
         let { chatId } = this.props;
         return (
             <div className="sessionlist">
@@ -121,21 +125,27 @@ export default class SessionList extends Component {
 )
 class SessionItem extends Component {
     itemClick = () => {
-        let {setCurrentSession, friend} = this.props;
+        let { setCurrentSession, friend } = this.props;
         setCurrentSession(friend);
     }
+    shouldComponentUpdate(nextProps, nextState) {
+        return !shallowequal(nextProps.friend, this.props.friend)
+            || nextProps.isSelected !== this.props.isSelected;
+    }
     render() {
-        let {friend, isSelected} = this.props;
+        let { friend, isSelected } = this.props;
         let url = `chat/single/${friend.name}`;
 
-        return <div className={ isSelected? "session-item-outer selected" : "session-item-outer"}>
-            <Link to = {url} className="session-item" onClick = {this.itemClick}>
+        return <div className={isSelected ? "session-item-outer selected" : "session-item-outer"}>
+            <Link to={url} className="session-item" onClick={this.itemClick}>
                 <div className="ctn-avator">
                     <Avator />
                 </div>
                 <div className="session-inner">
                     <div className="name">{friend.name}</div>
-                    <div className="msg-preview"></div>
+                    <div className="msg-preview">
+                        {friend.message ? friend.message.value : null}
+                    </div>
                 </div>
             </Link>
         </div>;
