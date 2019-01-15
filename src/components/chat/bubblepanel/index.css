@@ -16,24 +16,32 @@
     top: 61px;
     bottom: 180px;
     width: 100%;
+    overflow: auto;
     .ctn-msglist-inner {
-      overflow: auto;
+      display:flex;
+      flex-direction:column;
       .message-item {
         display: flex;
         padding: 10px;
         box-sizing: border-box;
         &.me{
           float:right;
+          justify-content:flex-end;
           .avator-outer {
             margin-left: 15px;
             margin-right:0;
           }
+          .name{
+            text-align: right;
+          }
           .message-text{
             background: #4eb1f5;
+            word-break:break-all;
           }
         }
         &.you{
           .message-text{
+            word-break:break-all;
             background-color: #e4e4e4;
             color: #333;
           }
