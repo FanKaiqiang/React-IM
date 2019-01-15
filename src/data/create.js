@@ -13,13 +13,13 @@ import thunk from 'redux-thunk';
 import '../sdk/init';
 import sign from './reducer/sign';
 import session from './reducer/session';
-// import message from './reducer/message';
+import message from './reducer/message';
 
 
 const _reducers = {
     sign: sign,
     session: session,
-    // message: message
+    message: message
 };
 
 const reducers = combineReducers(_reducers);
