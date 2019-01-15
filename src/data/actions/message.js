@@ -1,8 +1,41 @@
 import {GET_MSGS, SEND_TEXT_MSG, CHANGE_MSG_STATUS, createAction } from './actiontypes';
 import {getToken} from '@util/token';
+import {getRosters, changeRosterWithMsg} from './session';
+import eventEmitter from '@util/event';
 
 export let addTextMessage = createAction(SEND_TEXT_MSG, 'to', 'msg');
-export function sendTextMessage(to, text, chatType) {
+
+function addTextMessageWithRosterChange(to, msg) {//增加文本信息并更新好友列表
+    return (dispatch) => {
+        dispatch(addTextMessage(to, msg));
+        dispatch(changeRosterWithMsg(msg));
+
+    }
+}
+
+export function init() {
+    return (dispatch) => {
+        sdk.conn.listen({
+            onOpened: (message) =>  {
+                dispatch(getRosters());
+            },
+            onTextMessage: (message) => {//监听到消息
+                message.value = message.value || message.data;
+                dispatch(addTextMessageWithRosterChange(message.from, message));
+            },
+            onRoster: () => {
+                dispatch(getRosters());
+            },
+            onPresence: (message) => {
+                //this.handlePresence(message);
+                eventEmitter.emit('presence', message)
+            }
+        });
+    }
+
+}
+
+export function sendTextMessage(to, text, chatType) {//发送消息
     return (dispatch, getState) => {
         let id = sdk.conn.getUniqueId();             // 生成本地消息id
         let msg = new WebIM.message('txt', id);      // 创建文本消息
@@ -13,7 +46,7 @@ export function sendTextMessage(to, text, chatType) {
             success: function (id, serverMsgId) {
                 msg.fromMe = true;
                 msg.from = getToken().user.username;
-                dispatch(addTextMessage(to, msg));
+                dispatch(addTextMessageWithRosterChange(to, msg));
             },
             fail: function(e){
                 //console.log("Send private text error");
